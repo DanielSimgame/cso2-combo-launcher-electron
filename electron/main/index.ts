@@ -80,9 +80,31 @@ async function createWindow() {
     return { action: 'deny' }
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
+
+  ipcMain.on('window-event', (event, args = {name: ''}) => {
+    const eventFuncMap = new Map([
+        ['quit', () => app.quit()],
+        ['minimize', () => win?.minimize()],
+        ['drag', () => {
+          // make window move with mouse
+          console.log(args.pos)
+          const [x, y] = args.pos || [0, 0]
+          win?.setPosition(x + 1, y + 1, false)
+          win?.setPosition(x, y, false)
+        }],
+    ])
+    if (eventFuncMap.get(args.name) === undefined) return
+    eventFuncMap.get(args.name)?.()
+  })
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+})
 
 app.on('window-all-closed', () => {
   win = null

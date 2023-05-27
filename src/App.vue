@@ -18,26 +18,33 @@
 </template>
 
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import {ipcRenderer} from 'electron'
+// import HelloWorld from './components/HelloWorld.vue'
 
 // console.log("[App.vue]", `Hello world from Electron ${process.versions.electron}!`)
 const onMinimizeClick = () => {
-  window.api.send('window-minimize')
+  ipcRenderer.send('window-event', {
+    name: 'minimize'
+  })
 }
 const onCloseClick = () => {
-  window.api.send('window-close')
+  ipcRenderer.send('window-event', {
+    name: 'quit'
+  })
 }
 </script>
 
 
 <style lang="scss">
 header {
-  @apply fixed top-0 left-0 w-full h-8 flex flex-col justify-center items-center bg-black text-white;
+  @apply fixed top-0 left-0 w-full h-12 flex flex-col justify-center items-center bg-black text-white;
+  -webkit-app-region: drag;
+
   .title {
-    @apply text-xl;
+    @apply text-lg pointer-events-none select-none;
   }
   .window-control {
-    @apply absolute top-0 right-0 flex items-center h-full;
+    @apply absolute top-0 right-1 flex items-center h-full;
     button {
       @apply min-w-[25px] min-h-[25px];
     }
