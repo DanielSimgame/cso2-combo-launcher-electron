@@ -9,11 +9,16 @@ import {
     faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 
+import {
+    faQq,
+} from "@fortawesome/free-brands-svg-icons"
+
 // import {
 //     faWindowMinimize,
 // } from "@fortawesome/free-regular-svg-icons"
 
 const fontawesomeIcons = [
+    faQq,
     faSquareCaretLeft,
     faSquareMinus,
     faSquareXmark,
