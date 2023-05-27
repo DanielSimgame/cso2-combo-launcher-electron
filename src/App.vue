@@ -1,11 +1,18 @@
 <template>
   <header>
     <div class="title">
-      title1
+      <img class="w-8" :src="logoIcon" alt="icon" />
+      Counter-Strike Online 2
     </div>
     <div class="window-control">
-      <button @click="onMinimizeClick">-</button>
-      <button @click="onCloseClick">x</button>
+      <font-awesome-icon
+          @click="onMinimizeClick"
+          :icon="['fas', 'square-minus']"
+      />
+      <font-awesome-icon
+          @click="onCloseClick"
+          :icon="['fas', 'square-xmark']"
+      />
     </div>
   </header>
   <router-view>
@@ -20,6 +27,7 @@
 <script setup lang="ts">
 import {ipcRenderer} from 'electron'
 // import HelloWorld from './components/HelloWorld.vue'
+const logoIcon = '/navicon.ico'
 
 // console.log("[App.vue]", `Hello world from Electron ${process.versions.electron}!`)
 const onMinimizeClick = () => {
@@ -37,16 +45,18 @@ const onCloseClick = () => {
 
 <style lang="scss">
 header {
-  @apply fixed top-0 left-0 w-full h-12 flex flex-col justify-center items-center bg-black text-white;
+  @apply fixed top-0 left-0 w-full h-12 flex flex-col justify-center items-center bg-black text-white z-0;
   -webkit-app-region: drag;
 
   .title {
-    @apply text-lg pointer-events-none select-none;
+    @apply flex items-center gap-2 text-xl italic font-bold pointer-events-none select-none;
   }
   .window-control {
-    @apply absolute top-0 right-1 flex items-center h-full;
-    button {
-      @apply min-w-[25px] min-h-[25px];
+    @apply absolute w-[44px] top-0 right-3 flex justify-between items-center h-full z-10;
+    -webkit-app-region: no-drag;
+    svg {
+      @apply w-[20px] h-[20px] hover:scale-[1.2] cursor-pointer transition-all;
+      transform-origin: center center;
     }
   }
 }
