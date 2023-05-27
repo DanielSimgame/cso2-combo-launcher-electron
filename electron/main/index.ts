@@ -46,7 +46,12 @@ async function createWindow() {
     icon: join(process.env.PUBLIC, 'favicon.ico'),
     width: 800,
     height: 500,
+    frame: false,
+    transparent: true,
+    resizable: false,
+    movable: true,
     webPreferences: {
+      // devTools: false,
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
       // Consider using contextBridge.exposeInMainWorld

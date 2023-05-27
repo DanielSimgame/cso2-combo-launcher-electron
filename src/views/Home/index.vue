@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home-container">
     home
     <a href="https://www.electronjs.org/" target="_blank">
       <img src="@/assets/electron.svg" class="logo electron" alt="Electron logo" />
@@ -24,6 +24,11 @@ import HelloWorld from "../../components/HelloWorld.vue"
 </script>
 
 <style scoped>
+.home-container {
+  @apply flex;
+  background-color: transparent;
+}
+
 .flex-center {
   display: flex;
   align-items: center;
