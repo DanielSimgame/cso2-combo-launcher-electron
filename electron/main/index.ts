@@ -1,6 +1,7 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
+import Misc from "../utils/Misc";
 
 // The built directory structure
 //
@@ -40,6 +41,44 @@ const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
 
+/**
+ * @function windowDrag
+ * @description 窗口拖拽
+ * */
+const windowDrag = (pos: number[]) => {
+  // make window move with mouse
+  const [x, y] = pos || [0, 0]
+  win?.setPosition(x + 1, y + 1, false)
+  win?.setPosition(x, y, false)
+}
+
+/**
+ * @function windowEventHandler
+ * @description 自定义的窗口事件处理
+ * */
+const windowEventHandler = (event, args: CustomWindowEvent) => {
+  const eventFuncMap = new Map([
+    ['quit', () => app.quit()],
+    ['minimize', () => win?.minimize()],
+    ['drag', () => windowDrag(args.pos)],
+  ])
+  if (eventFuncMap.get(args.name) === undefined) return
+  eventFuncMap.get(args.name)?.()
+}
+
+/**
+ * @function pullQq
+ * @description 拉起QQ，加入群聊
+ * @param _ 窗口事件
+ * @param args {string} QQ群号
+ * */
+const pullQq = (_, args) => {
+  const groupUrl = `tencent://groupwpa/?subcmd=all&param=${Misc.StringToHex('groupUin:' + args)}`
+  shell.openExternal(groupUrl)
+      .then(_ => {})
+      .catch(e => console.log('catch',e))
+}
+
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
@@ -76,26 +115,14 @@ async function createWindow() {
 
   // Make all links open with the browser, not with the application
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https:')) shell.openExternal(url)
+    if (url.startsWith('https:') || url.startsWith('http:')) shell.openExternal(url)
     return { action: 'deny' }
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 
-  ipcMain.on('window-event', (event, args = {name: ''}) => {
-    const eventFuncMap = new Map([
-        ['quit', () => app.quit()],
-        ['minimize', () => win?.minimize()],
-        ['drag', () => {
-          // make window move with mouse
-          console.log(args.pos)
-          const [x, y] = args.pos || [0, 0]
-          win?.setPosition(x + 1, y + 1, false)
-          win?.setPosition(x, y, false)
-        }],
-    ])
-    if (eventFuncMap.get(args.name) === undefined) return
-    eventFuncMap.get(args.name)?.()
-  })
+  ipcMain.on('window-event', windowEventHandler)
+
+  ipcMain.on('pull-qq', pullQq)
 }
 
 app.whenReady().then(() => {

@@ -48,7 +48,7 @@
       <div class="h-[90px] flex flex-col justify-between items-center gap-2">
         <h1>加入社区</h1>
         <div class="communities h-[60px] flex justify-center items-center">
-          <div class="w-[32px] h-[32px] cursor-pointer">
+          <div class="w-[32px] h-[32px] cursor-pointer" title="QQ群" @click="showQqGroups">
             <font-awesome-icon class="w-full h-full" :icon="['fab', 'qq']" style="color: #3a88fe;" />
           </div>
         </div>
@@ -75,13 +75,22 @@
         </a>
       </div>
     </section>
+    <div v-if="isQqGroupsShown" ref="qqGroupsRef" class="qq-groups-dialog">
+      <font-awesome-icon
+          @click="onQqGroupsCloseClick"
+          :icon="['fas', 'square-xmark']"
+      />
+      <QqGroup v-for="(group, key) in qqGroup" :key="key" :number="group"/>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {ref} from 'vue'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-// get from package.json
 import config from '../../../package.json'
+import QqGroup from '@/components/QqGroup.vue'
+
 const version = config.version
 const gitRepoUrl = config.repository.url
 // const gitRepoUrl = 'https://github.com/DanielSimgame/cso2-combo-launcher-electron'
@@ -147,6 +156,24 @@ const makers = [
     link: 'https://github.com/DanielSimgame',
   },
 ]
+
+const qqGroup = ['548424066', '620482449', '651075424', '777944950', '620017271']
+
+const isQqGroupsShown = ref(false)
+const qqGroupsRef = ref<HTMLElement | null>(null)
+const showQqGroups = () => {
+  isQqGroupsShown.value = true
+}
+
+const onQqGroupsCloseClick = () => {
+  qqGroupsRef.value?.classList.add('qq-groups-dialog__leave')
+  const leaveTimer = setTimeout(() => {
+    isQqGroupsShown.value = false
+    clearTimeout(leaveTimer)
+  }, 250)
+}
+// qq groups: 548424066, 620482449, 651075424, 777944950, 620017271
+// `tencent://groupwpa/?subcmd=all&param=${StringToHex('groupUin:'number)}`
 </script>
 
 <style lang="scss" scoped>
@@ -221,6 +248,20 @@ const makers = [
   }
 }
 
+.qq-groups-dialog {
+  @apply absolute w-1/2 top-1/2 left-1/2 bg-black rounded-lg p-5
+  flex flex-wrap gap-2 items-center justify-center;
+  animation: fadeInFromRightWithScaleUp 0.25s ease-in-out forwards;
+
+  svg {
+    @apply absolute right-2 top-2 w-[20px] h-[20px] cursor-pointer transform hover:scale-[1.2] transition-transform;
+  }
+
+  &__leave {
+    animation: fadeOutToRightWithScaleDown 0.25s ease-in-out forwards;
+  }
+}
+
 @keyframes fadeInFromDown {
   0% {
     opacity: 0;
@@ -229,6 +270,28 @@ const makers = [
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeInFromRightWithScaleUp {
+  0% {
+    opacity: 0;
+    transform: translateX(-25%) translateY(-50%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%) scale(1);
+  }
+}
+
+@keyframes fadeOutToRightWithScaleDown {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-25%) translateY(-50%) scale(0.8);
   }
 }
 </style>
