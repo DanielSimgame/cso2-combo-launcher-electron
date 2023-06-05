@@ -4,6 +4,12 @@
       <img class="w-8" :src="logoIcon" alt="icon" />
       <span ref="titleRef">Counter-Strike Online 2</span>
     </div>
+    <div class="online-members">
+      <font-awesome-icon
+          :icon="['fas', 'user-group']"
+      />
+      <span>{{ onlineMembers }}</span>
+    </div>
     <div class="window-control">
       <font-awesome-icon
           @click="onMinimizeClick"
@@ -23,6 +29,7 @@ import {onMounted, ref} from 'vue'
 
 const logoIcon = '/favicon.ico'
 const titleRef = ref<HTMLElement | null>(null)
+const onlineMembers = ref('获取中...')
 
 const onMinimizeClick = () => {
   ipcRenderer.send('window-event', {
@@ -59,13 +66,26 @@ header {
       transition-delay: 1s;
     }
   }
-  .window-control {
-    @apply absolute w-[44px] top-0 right-3 flex justify-between items-center h-full z-10;
-    -webkit-app-region: no-drag;
+  .online-members, .window-control {
+    @apply absolute top-0 flex justify-between items-center h-full;
     svg {
-      @apply w-[20px] h-[20px] hover:scale-[1.2] cursor-pointer transition-all;
+      @apply w-[20px] h-[20px];
+    }
+  }
+  .window-control {
+    right: 0.75rem;
+    width: 44px;
+    -webkit-app-region: no-drag;
+    z-index: 10;
+
+    svg {
+      @apply hover:scale-[1.2] cursor-pointer transition-all;
       transform-origin: center center;
     }
+  }
+  .online-members {
+    left: 0.75rem;
+    gap: .5rem;
   }
 }
 </style>

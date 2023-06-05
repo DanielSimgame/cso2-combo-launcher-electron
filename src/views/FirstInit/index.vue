@@ -83,7 +83,7 @@ onMounted(() => {
       @apply w-full p-2 rounded-md;
 
       &.btn-primary {
-        @apply bg-blue-700 text-white;
+        @apply bg-orange-600 text-white;
       }
     }
   }

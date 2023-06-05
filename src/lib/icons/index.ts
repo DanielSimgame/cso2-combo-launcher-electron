@@ -6,6 +6,7 @@ import {
     faSquareXmark,
     faUpRightFromSquare,
     faUser,
+    faUserGroup,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 
@@ -24,6 +25,7 @@ const fontawesomeIcons = [
     faSquareXmark,
     faUpRightFromSquare,
     faUser,
+    faUserGroup,
     faXmark,
 ]
 /* Fontawesome 图标引入 */
