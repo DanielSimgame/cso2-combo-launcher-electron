@@ -1,6 +1,6 @@
 <template>
   <button @click="pullQq(number)">
-    <font-awesome-icon class="w-[32px] h-[32px]" :icon="['fab', 'qq']" style="color: #3a88fe;" />
+    <font-awesome-icon class="w-[24px] h-[24px]" :icon="['fab', 'qq']" style="color: #3a88fe;" />
     <span>{{ number }}</span>
   </button>
 </template>

@@ -1,8 +1,8 @@
 <template>
   <div id="FirstInit">
     <div class="init-head">
-      <CircleIcon :icon="['fas', 'user']"></CircleIcon>
-      <h1>初次到来？</h1>
+      <CircleIcon class="w-[50px] h-[50px]" :icon="['fas', 'user']"></CircleIcon>
+      <h1 ref="firstInitTitleRef">初次到来？</h1>
     </div>
     <form>
       <div class="form-group" style="animation-delay: 75ms">
@@ -19,35 +19,48 @@
       </div>
     </form>
     <div class="buttons">
-      <button @click="router.push('/')">跳过</button>
+      <button @click="skipInit">跳过</button>
       <button class="btn-primary">注册</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import CircleIcon from "@/components/CircleIcon.vue"
 
 const router = useRouter()
+const firstInitTitleRef = ref<HTMLElement | null>(null)
+
+const skipInit = () => {
+  firstInitTitleRef.value!.style.width = '0'
+  router.push('/')
+}
+
+onMounted(() => {
+  firstInitTitleRef.value!.style.width = `${firstInitTitleRef.value!.scrollWidth}px`
+})
 </script>
 
 <style lang="scss" scoped>
 #FirstInit {
   @apply mx-auto w-fit h-fit px-6 py-6 bg-black flex flex-col gap-6
   justify-center items-center rounded-2xl shadow-2xl;
-  animation: fadeInWithScaleUp .4s cubic-bezier(1,0,0,1) forwards;
+  animation: fadeInWithScaleUp .4s cubic-bezier(0.09, 0.57, 0.49, 0.9) forwards;
 
   .init-head {
-    @apply flex justify-between items-center;
-    width: 50px;
+    @apply flex justify-between items-center overflow-hidden select-none;
+    //width: 50px;
     height: 50px;
-    animation: xExpand .65s ease-in-out forwards;
+    animation: xExpand .65s cubic-bezier(0.09, 0.57, 0.49, 0.9) forwards;
 
     h1 {
-      @apply text-[2rem] overflow-hidden text-clip whitespace-nowrap text-right;
+      @apply text-[2rem] text-clip whitespace-nowrap;
       width: 0;
-      animation: xExpand_Text .75s ease-in-out forwards;
+      display: inline-block;
+      transition: width 0.5s cubic-bezier(0.09, 0.57, 0.49, 0.9);
+      transition-delay: .5s;
     }
   }
 
@@ -55,7 +68,7 @@ const router = useRouter()
     @apply min-w-[300px] flex flex-col gap-5;
     .form-group {
       @apply flex w-full justify-between items-center;
-      animation: fadeInFromDown .5s ease-in-out forwards;
+      animation: fadeInFromDown .5s cubic-bezier(0.09, 0.57, 0.49, 0.9) forwards;
       opacity: 0;
 
       input {
@@ -82,15 +95,6 @@ const router = useRouter()
   }
   to {
     width: calc(50px + 2rem * 5.5);
-  }
-}
-
-@keyframes xExpand_Text {
-  from {
-    width: 0;
-  }
-  to {
-    width: calc(2rem * 5.5);
   }
 }
 

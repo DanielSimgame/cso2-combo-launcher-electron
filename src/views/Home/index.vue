@@ -1,18 +1,23 @@
 <template>
-  <div class="home-container">
-    <span>home</span>
+  <div class="mx-auto w-full h-full grid grid-cols-3">
+    <div class="col-span-1 row-span-3">
+      Character picture here.
+    </div>
+    <div class="col-span-2">
+      <div class="login-form"></div>
+    </div>
+    <div class="col-span-2">
+      <!-- server selection radios -->
+      <input type="radio" id="server1" name="server" value="Shanghai">
+      <label class="ml-1" for="server1">Shanghai</label><br>
+    </div>
   </div>
-  <HelloWorld msg="Electron + Vite + Vue" />
   <button @click="router.push('/first-init')">
     First?
   </button>
   <button @click="router.push('/about')">
     About
   </button>
-  <div class="flex-center">
-    Place static files into the <code>/public</code> folder
-    <img style="width: 2.4em; margin-left: .4em;" src="/logo.svg" alt="Logo">
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,11 +35,5 @@ button {
 .home-container {
   @apply flex;
   background-color: transparent;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>

@@ -5,7 +5,7 @@
     </div>
     <section class="flex flex-col justify-center items-center gap-2">
       <div class="flex items-center gap-2">
-        <img width="64" height="64" src="/public/navicon.ico" alt="CSO2 Combo Launcher logo" />
+        <img width="64" height="64" src="/favicon.ico" alt="CSO2 Combo Launcher logo" />
         <h1 class="text-3xl font-bold">
           CSO2 启动器 Electron
         </h1>
@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import config from '../../../package.json'
 import QqGroup from '@/components/QqGroup.vue'
@@ -138,21 +138,25 @@ const makers = [
   {
     name: 'leang97',
     avatar: 'https://avatars.githubusercontent.com/u/12026849?v=4',
+    backupAvatar: '/images/contributors/12026849.png',
     link: 'https://github.com/leang97',
   },
   {
     name: 'dounai2333',
     avatar: 'https://avatars.githubusercontent.com/u/45044404?v=4',
+    backupAvatar: '/images/contributors/45044404.jpeg',
     link: 'https://github.com/dounai2333',
   },
   {
     name: 'GEEKiDoS',
     avatar: 'https://avatars.githubusercontent.com/u/14933408?v=4',
+    backupAvatar: '/images/contributors/14933408.jpeg',
     link: 'https://github.com/GEEKiDoS',
   },
   {
     name: 'Daniel Morrison',
     avatar: 'https://avatars.githubusercontent.com/u/15177071?v=4',
+    backupAvatar: '/images/contributors/15177071.jpeg',
     link: 'https://github.com/DanielSimgame',
   },
 ]
@@ -174,6 +178,34 @@ const onQqGroupsCloseClick = () => {
 }
 // qq groups: 548424066, 620482449, 651075424, 777944950, 620017271
 // `tencent://groupwpa/?subcmd=all&param=${StringToHex('groupUin:'number)}`
+
+/**
+ * @function getRemoteAvatarOrFallback
+ * @description 获取远程头像或者使用本地备用头像并返回url，当远程头像获取失败时（超时3000ms）使用本地备用头像，即makers[i].backupAvatar，而非[Object Promise]
+ * @returns {string} url result
+ *  */
+const getRemoteAvatarOrFallback = () => {
+  makers.forEach(maker => {
+    const timeout = 1000
+    const timer = setTimeout(() => {
+      maker.avatar = maker.backupAvatar
+      clearTimeout(timer)
+    }, timeout)
+    fetch(maker.avatar).then((res) => {
+      if (res.ok) {
+        clearTimeout(timer)
+        return
+      }
+      maker.avatar = maker.backupAvatar
+    }).catch(() => {
+      maker.avatar = maker.backupAvatar
+    })
+  })
+}
+
+onMounted(() => {
+  getRemoteAvatarOrFallback()
+})
 </script>
 
 <style lang="scss" scoped>

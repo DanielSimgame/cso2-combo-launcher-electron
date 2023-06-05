@@ -1,7 +1,7 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, globalShortcut } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
-import Misc from "../utils/Misc";
+import Misc from '../utils/Misc'
 
 // The built directory structure
 //
@@ -131,6 +131,9 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  globalShortcut.register('f5', () => {})
+  globalShortcut.register('CommandOrControl+R', () => {})
 })
 
 app.on('window-all-closed', () => {
