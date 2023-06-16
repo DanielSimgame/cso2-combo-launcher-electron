@@ -2,7 +2,7 @@
   <div id="FirstInit">
     <div class="init-head">
       <CircleIcon class="w-[50px] h-[50px]" :icon="['fas', 'user']"></CircleIcon>
-      <h1 ref="firstInitTitleRef">初次到来？</h1>
+      <h1>{{ $t('init.title') }}</h1>
     </div>
     <form>
       <div class="form-group" style="animation-delay: 75ms">
@@ -26,21 +26,15 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, onMounted, ref} from 'vue'
+// import {nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import CircleIcon from "@/components/CircleIcon.vue"
 
 const router = useRouter()
-const firstInitTitleRef = ref<HTMLElement | null>(null)
 
 const skipInit = () => {
-  firstInitTitleRef.value!.style.width = '0'
   router.push('/')
 }
-
-onMounted(() => {
-  firstInitTitleRef.value!.style.width = `${firstInitTitleRef.value!.scrollWidth}px`
-})
 </script>
 
 <style lang="scss" scoped>
@@ -53,14 +47,14 @@ onMounted(() => {
     @apply flex justify-between items-center overflow-hidden select-none;
     //width: 50px;
     height: 50px;
-    animation: xExpand .65s cubic-bezier(0.09, 0.57, 0.49, 0.9) forwards;
+    //animation: xExpand .65s cubic-bezier(0.09, 0.57, 0.49, 0.9) forwards;
 
     h1 {
-      @apply text-[2rem] text-clip whitespace-nowrap;
-      width: 0;
+      @apply text-[2rem] text-clip whitespace-nowrap ml-3;
+      //width: 0;
       display: inline-block;
-      transition: width 0.5s cubic-bezier(0.09, 0.57, 0.49, 0.9);
-      transition-delay: .5s;
+      //transition: width 0.5s cubic-bezier(0.09, 0.57, 0.49, 0.9);
+      //transition-delay: .5s;
     }
   }
 

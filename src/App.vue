@@ -7,11 +7,21 @@
       </keep-alive>
     </template>
   </router-view>
+  <AppDialog
+      v-model="isGlobalDialogShown"
+      title="a test dialog"
+  >
+    test dialog
+  </AppDialog>
 </template>
 
 <script setup lang="ts">
 import GlobalHeader from './components/GlobalHeader.vue'
-// import HelloWorld from './components/HelloWorld.vue'
+import AppDialog from './components/AppDialog.vue'
+import {useAppStore} from './lib/store/ApplicationStore'
+import {storeToRefs} from 'pinia'
+
+const {isGlobalDialogShown} = storeToRefs(useAppStore())
 
 // console.log("[App.vue]", `Hello world from Electron ${process.versions.electron}!`)
 </script>

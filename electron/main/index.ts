@@ -2,6 +2,7 @@ import { app, BrowserWindow, shell, ipcMain, globalShortcut } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import Misc from '../utils/Misc'
+import * as fs from "fs";
 
 // The built directory structure
 //
@@ -40,6 +41,38 @@ let win: BrowserWindow | null = null
 const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
+let config: LauncherConfig
+
+/**
+ * @function getConfigJson
+ * @description 获取配置文件
+ * */
+const getConfigJson = () => {
+  // remove last path segment by '/'
+  const execPath = app.getPath('exe').split('/').slice(0, -1).join('/')
+  const configPath = execPath + '/config.json'
+  try {
+    config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+    // config = require(configPath)
+  }
+  catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      console.log('no config file')
+      const newConfig: LauncherConfig = {
+        username: '',
+        password: '',
+        server: 'shanghai',
+        launcherLanguage: 'zhCN',
+      }
+      // create config.json file
+      fs.writeFile(configPath, JSON.stringify(newConfig), err => {
+        if (err) console.log(err)
+        // send error to renderer
+        win?.webContents.send('error', err)
+      })
+    }
+  }
+}
 
 /**
  * @function windowDrag
@@ -73,7 +106,7 @@ const windowEventHandler = (event, args: CustomWindowEvent) => {
  * @param args {string} QQ群号
  * */
 const pullQq = (_, args) => {
-  const groupUrl = `tencent://groupwpa/?subcmd=all&param=${Misc.StringToHex('groupUin:' + args)}`
+  const groupUrl = `tencent://groupwpa/?subcmd=all&param=${Misc.stringToHex('groupUin:' + args)}`
   shell.openExternal(groupUrl)
       .then(_ => {})
       .catch(e => console.log('catch',e))
@@ -99,6 +132,8 @@ async function createWindow() {
       contextIsolation: false,
     },
   })
+
+  getConfigJson()
 
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url)

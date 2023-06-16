@@ -1,12 +1,17 @@
 /* Fontawesome 图标引入 */
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
+    faCheck,
+    faCircleChevronDown,
+    faCircleInfo,
+    faGears,
     faSquareCaretLeft,
     faSquareMinus,
     faSquareXmark,
     faUpRightFromSquare,
     faUser,
     faUserGroup,
+    faUserPlus,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 
@@ -19,6 +24,10 @@ import {
 // } from "@fortawesome/free-regular-svg-icons"
 
 const fontawesomeIcons = [
+    faCheck,
+    faCircleChevronDown,
+    faCircleInfo,
+    faGears,
     faQq,
     faSquareCaretLeft,
     faSquareMinus,
@@ -26,6 +35,7 @@ const fontawesomeIcons = [
     faUpRightFromSquare,
     faUser,
     faUserGroup,
+    faUserPlus,
     faXmark,
 ]
 /* Fontawesome 图标引入 */
