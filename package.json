@@ -50,6 +50,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@headlessui/vue": "^1.7.14",
+    "pinia": "^2.1.4",
+    "vue-i18n": "^9.2.2",
     "vue-router": "^4.0.13"
   }
 }
