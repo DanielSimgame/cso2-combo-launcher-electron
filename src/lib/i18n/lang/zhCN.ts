@@ -17,7 +17,9 @@ export const zhCN = {
             placeholder: '选择服务器',
             Shanghai: '上海',
             HongKong: '香港',
-        }
+            unknown: '未知',
+        },
+        onlineMembers: '获取中...',
     },
     homepage: {
         settings: '设置',
@@ -27,5 +29,16 @@ export const zhCN = {
     },
     init: {
         title: '初次到来？',
+    },
+    about: {
+        title: 'CSO2 启动器 Electron',
+        subtitle1: '这是一个开源项目，代码可在',
+        subtitle2: '查阅',
+        contributors: '前人栽树后人乘凉，欢迎贡献源代码',
+        community: {
+            label: '加入社区',
+            qq: 'QQ群',
+        },
+        frameworks: '向以下框架和库致以崇高敬意：',
     },
 }

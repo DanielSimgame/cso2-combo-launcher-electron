@@ -1,8 +1,7 @@
 <template>
-  <div class="mt-12 mx-auto w-full h-full grid grid-cols-7 gap-3">
-    <div class="col-span-3 row-span-6">
-      Character picture here.
-    </div>
+  <div class="homepage">
+    <div class="homepage-bg"></div>
+    <div class="col-span-3 row-span-6" />
     <!-- login form -->
     <div class="col-span-4 row-span-2">
       <form>
@@ -11,7 +10,7 @@
           <input
               id="username"
               type="text"
-              :value="loginForm.username"
+              :value="globalConfig.username"
               :placeholder="$t('universal.username.placeholder')"
           />
         </div>
@@ -20,14 +19,14 @@
           <input
               id="password"
               type="password"
-              :value="loginForm.password"
+              :value="globalConfig.password"
               :placeholder="$t('universal.password.placeholder')"
           />
         </div>
       </form>
     </div>
     <!-- server selections -->
-    <div class="col-span-2 row-span-1 flex justify-between items-center">
+    <div class="relative col-span-2 row-span-1 flex justify-between items-center z-[3]">
       <span class="w-[100px] text-left">
         {{ $t('universal.servers.label') }}
       </span>
@@ -35,7 +34,7 @@
         <div class="relative w-1/2 h-[40px]">
           <ListboxButton class="list-box-btn group">
             <span class="block truncate text-black">
-              {{ $t(serverSelection.translation) }}
+              {{ $t(serverTranslation) }}
             </span>
             <span
               class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
@@ -53,7 +52,7 @@
               leave-to-class="opacity-0"
           >
             <ListboxOptions
-                class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                class="server-list-box-options"
             >
               <ListboxOption
                   v-slot="{ active, selected }"
@@ -129,22 +128,22 @@
       </button>
     </div>
     <!-- setting button -->
-    <div class="col-span-2 row-span-1 grid grid-cols-4 gap-1">
+    <div class="col-span-2 row-span-1 function-btns">
       <button
-          class="w-full h-[40px] bg-black bg-opacity-75"
+          class="w-full h-[40px] bg-black bg-opacity-75 flex-1 border-black"
           :title="$t('homepage.about')"
           @click="onAboutClick"
       >
         <font-awesome-icon :icon="['fas', 'circle-info']" />
       </button>
       <button
-          class="w-full h-[40px] bg-black bg-opacity-75 col-span-2"
+          class="w-full h-[40px] bg-black bg-opacity-75 flex-[2]"
           @click="onSettingsClick"
       >
         {{ $t('homepage.settings') }}
       </button>
       <button
-          class="w-full h-[40px] main-btn"
+          class="w-full h-[40px] main-btn flex-1 border-black"
           :title="$t('homepage.register')"
           @click="onRegisterClick"
       >
@@ -155,7 +154,7 @@
     <div class="col-span-4 row-span-2 mt-10">
       <textarea
           :value="output"
-          class="w-full h-full rounded-lg text-black p-2 focus-visible:ring-0 focus-visible:outline-none resize-none"
+          class="w-full h-full rounded-lg text-black p-2 focus-visible:ring-0 focus-visible:outline-none resize-none dark:text-gray-400"
           readonly
       />
     </div>
@@ -169,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref} from 'vue'
+import {computed, onMounted, reactive, ref, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import {
   Listbox,
@@ -179,22 +178,25 @@ import {
 } from '@headlessui/vue'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {useAppStore} from '../../lib/store/ApplicationStore'
+import {storeToRefs} from "pinia";
 
 const router = useRouter()
 const {toggleGlobalDialog} = useAppStore()
 
-const loginForm = reactive({
-  username: '',
-  password: '',
-})
+const {globalConfig} = storeToRefs(useAppStore())
 
 const servers = [
   { id: 1, name: 'shanghai', translation: 'universal.servers.Shanghai', unavailable: false },
-  { id: 2, name: 'HongKong', translation: 'universal.servers.HongKong', unavailable: true },
+  // { id: 2, name: 'HongKong', translation: 'universal.servers.HongKong', unavailable: true },
 ]
-const serverSelection = ref(servers[0])
+const serverSelection = ref(globalConfig.value.server)
+const serverTranslation = ref('universal.servers.unknown')
 const output = ref('连接中...')
 const isStartGameDisabled = ref(true)
+
+watch(() => globalConfig.value.server, (value) => {
+  serverTranslation.value = servers.find((s) => s.name === value)?.translation ?? 'universal.servers.unknown'
+})
 
 const onStartGameClick = () => {
   console.log('start game')
@@ -205,7 +207,10 @@ const onAboutClick = () => {
 }
 
 const onSettingsClick = () => {
-  toggleGlobalDialog()
+  toggleGlobalDialog(true, {
+    title: 'Settings',
+    content: 'This is a setting dialog',
+  })
   // router.push('/settings')
 }
 
@@ -221,6 +226,27 @@ button {
 
 button.main-btn {
   @apply bg-orange-600 hover:bg-orange-500 hover:border-transparent transition-colors;
+}
+
+.homepage {
+  @apply relative mx-auto p-8 w-full h-full grid grid-cols-7 gap-3;
+  height: calc(100% - var(--global-header-height));
+  background-image: url('/images/assault.webp');
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 0;
+
+  & > div {
+    @apply relative;
+    //z-index: 2;
+  }
+
+  .homepage-bg {
+    @apply absolute w-full h-full right-0 top-1/2 transform -translate-y-1/2
+    bg-gradient-to-r from-transparent to-45% to-[var(--global-background-color)];
+    //background-color: var(--global-background-color);
+    z-index: 0;
+  }
 }
 
 #startGame {
@@ -240,10 +266,23 @@ form {
       @apply w-[100px] text-left;
     }
     input {
-      @apply p-2 rounded-md text-black focus-visible:outline-none;
+      @apply p-2 rounded-md text-black dark:text-white focus-visible:outline-none;
       width: calc(100% - 100px);
     }
   }
+}
+
+.function-btns {
+  @apply flex justify-between items-center gap-1;
+
+  button {
+    @apply h-full;
+  }
+}
+
+.server-list-box-options {
+  @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1
+  ring-black ring-opacity-5 focus:outline-none sm:text-sm;
 }
 
 .list-box-btn {

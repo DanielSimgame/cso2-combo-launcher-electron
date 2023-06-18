@@ -1,17 +1,18 @@
 <template>
   <GlobalHeader />
-  <router-view>
+  <router-view class="mt-12">
     <template #default="{ Component }">
       <keep-alive :exclude="['Home', 'FirstInit']">
         <component :is="Component"></component>
       </keep-alive>
     </template>
   </router-view>
+  <ProgressBar v-if="globalProgress.isShown"/>
   <AppDialog
-      v-model="isGlobalDialogShown"
-      title="a test dialog"
+      v-model="globalDialog.isShown"
+      :title="globalDialog.title"
   >
-    test dialog
+    {{ globalDialog.content }}
   </AppDialog>
 </template>
 
@@ -20,8 +21,9 @@ import GlobalHeader from './components/GlobalHeader.vue'
 import AppDialog from './components/AppDialog.vue'
 import {useAppStore} from './lib/store/ApplicationStore'
 import {storeToRefs} from 'pinia'
+import ProgressBar from './components/ProgressBar.vue'
 
-const {isGlobalDialogShown} = storeToRefs(useAppStore())
+const {globalDialog, globalProgress} = storeToRefs(useAppStore())
 
 // console.log("[App.vue]", `Hello world from Electron ${process.versions.electron}!`)
 </script>

@@ -7,24 +7,24 @@
       <div class="flex items-center gap-2">
         <img width="64" height="64" src="/favicon.ico" alt="CSO2 Combo Launcher logo" />
         <h1 class="text-3xl font-bold">
-          CSO2 启动器 Electron
+          {{ $t('about.title') }}
         </h1>
         <span>v{{ version }}</span>
       </div>
       <h1>
         <!-- This is an open-source project, code is available on -->
-        这是一个开源项目，代码可在
+        {{ $t('about.subtitle1') }}
         <a class="font-bold transition-colors" :href="gitRepoUrl" target="_blank">
           GitHub
           <font-awesome-icon class="text-[16px]" :icon="['fas', 'up-right-from-square']" />
         </a>
-        查阅
+        {{ $t('about.subtitle2') }}
       </h1>
     </section>
     <section class="min-h-[90px] flex items-center justify-around">
       <div class="h-[90px] flex flex-col justify-between items-center gap-2">
         <h1>
-          前人栽树后人乘凉，欢迎贡献源代码
+          {{ $t('about.contributors') }}
         </h1>
         <div class="avatars">
           <div
@@ -46,9 +46,13 @@
         </div>
       </div>
       <div class="h-[90px] flex flex-col justify-between items-center gap-2">
-        <h1>加入社区</h1>
+        <h1>{{ $t('about.community.label') }}</h1>
         <div class="communities h-[60px] flex justify-center items-center">
-          <div class="w-[32px] h-[32px] cursor-pointer" title="QQ群" @click="showQqGroups">
+          <div
+              class="w-[32px] h-[32px] cursor-pointer"
+              :title="$t('about.community.qq')"
+              @click="showQqGroups"
+          >
             <font-awesome-icon class="w-full h-full" :icon="['fab', 'qq']" style="color: #3a88fe;" />
           </div>
         </div>
@@ -57,7 +61,7 @@
     <section>
       <h1>
         <!-- Express high respect for the following framework and libraries: -->
-        向以下框架和库致以崇高敬意：
+        {{ $t('about.frameworks') }}
       </h1>
       <div class="frameworks">
         <a
@@ -109,7 +113,7 @@ const frameworks = [
     link: 'https://vitejs.dev/'
   },
   {
-    name: 'Vue',
+    name: 'Vue.js',
     logo: '/src/assets/images/frameworks/vue.svg',
     class: 'vue',
     link: 'https://vuejs.org/'
@@ -210,7 +214,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .about-container {
-  @apply w-full h-full flex flex-col gap-10 select-none;
+  @apply w-full flex flex-col justify-center gap-10 select-none;
+  height: calc(100vh - var(--global-header-height));
 }
 
 .back-button {

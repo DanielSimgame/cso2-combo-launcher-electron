@@ -41,7 +41,25 @@ let win: BrowserWindow | null = null
 const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
-let config: LauncherConfig
+let config: LauncherConfig | null = null
+
+/**
+ * @function newConfig
+ * @description 创建新的配置文件
+ * @param {string} configPath 配置文件路径
+ * */
+const newConfig = (configPath) => {
+  const newConfig: LauncherConfig = {
+    username: '',
+    password: '',
+    server: 'shanghai',
+    launcherLanguage: 'zhCN',
+  }
+  // create config.json file
+  fs.writeFile(configPath, JSON.stringify(newConfig), err => {
+    if (err) win?.webContents.send('error', err)
+  })
+}
 
 /**
  * @function getConfigJson
@@ -53,24 +71,11 @@ const getConfigJson = () => {
   const configPath = execPath + '/config.json'
   try {
     config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+    win?.webContents.send('launcher-config', config)
     // config = require(configPath)
   }
   catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') {
-      console.log('no config file')
-      const newConfig: LauncherConfig = {
-        username: '',
-        password: '',
-        server: 'shanghai',
-        launcherLanguage: 'zhCN',
-      }
-      // create config.json file
-      fs.writeFile(configPath, JSON.stringify(newConfig), err => {
-        if (err) console.log(err)
-        // send error to renderer
-        win?.webContents.send('error', err)
-      })
-    }
+    if (e.code === 'MODULE_NOT_FOUND') newConfig(configPath)
   }
 }
 
@@ -114,7 +119,7 @@ const pullQq = (_, args) => {
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: 'CSO2 Combo Launcher',
     icon: join(process.env.PUBLIC, 'favicon.ico'),
     width: 800,
     height: 500,
@@ -133,8 +138,6 @@ async function createWindow() {
     },
   })
 
-  getConfigJson()
-
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url)
     // Open devTool if the app is not packaged
@@ -146,6 +149,7 @@ async function createWindow() {
   // Test actively push message to the Electron-Renderer
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', new Date().toLocaleString())
+    getConfigJson()
   })
 
   // Make all links open with the browser, not with the application

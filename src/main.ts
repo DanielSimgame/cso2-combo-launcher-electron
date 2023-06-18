@@ -8,6 +8,8 @@ import {iconsInit} from './lib/icons'
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome"
 import { createPinia } from 'pinia'
 import {i18n} from './lib/i18n'
+import {useAppStore} from './lib/store/ApplicationStore'
+import {ipcRenderer} from "electron"
 
 iconsInit()
 createApp(App)
@@ -19,3 +21,8 @@ createApp(App)
     .$nextTick(() => {
         postMessage({ payload: 'removeLoading' }, '*')
     })
+
+ipcRenderer.on('launcher-config', (_event, config) => {
+    const {setGlobalConfig} = useAppStore()
+    setGlobalConfig(config)
+})

@@ -26,10 +26,12 @@
 <script setup lang="ts">
 import {ipcRenderer} from 'electron'
 import {onMounted, ref} from 'vue'
+import {useI18n} from 'vue-i18n'
 
+const { t } = useI18n()
 const logoIcon = '/favicon.ico'
 const titleRef = ref<HTMLElement | null>(null)
-const onlineMembers = ref('获取中...')
+const onlineMembers = ref(t('universal.onlineMembers'))
 
 const onMinimizeClick = () => {
   ipcRenderer.send('window-event', {
@@ -52,7 +54,8 @@ onMounted(() => {
 
 <style scoped lang="scss">
 header {
-  @apply fixed top-0 left-0 w-full h-12 flex flex-col justify-center items-center bg-black text-white z-0;
+  @apply fixed top-0 left-0 w-full flex flex-col justify-center items-center bg-black text-white z-0;
+  height: var(--global-header-height);
   -webkit-app-region: drag;
 
   .title {
