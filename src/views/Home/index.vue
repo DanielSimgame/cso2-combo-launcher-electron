@@ -30,10 +30,11 @@
       <span class="w-[100px] text-left">
         {{ $t('universal.servers.label') }}
       </span>
-      <Listbox v-model="serverSelection">
+      <Listbox v-model="globalConfig.server">
         <div class="relative w-1/2 h-[40px]">
           <ListboxButton class="list-box-btn group">
             <span class="block truncate text-black">
+<!--              {{ $t(globalConfig.server.translation || 'universal.servers.unknown') }}-->
               {{ $t(serverTranslation) }}
             </span>
             <span
@@ -189,14 +190,11 @@ const servers = [
   { id: 1, name: 'shanghai', translation: 'universal.servers.Shanghai', unavailable: false },
   // { id: 2, name: 'HongKong', translation: 'universal.servers.HongKong', unavailable: true },
 ]
-const serverSelection = ref(globalConfig.value.server)
-const serverTranslation = ref('universal.servers.unknown')
+// const serverSelection = ref({})
+// const serverTranslation = ref(globalConfig.value.server.translation || 'universal.servers.unknown')
+const serverTranslation = computed(() => globalConfig.value.server.translation || 'universal.servers.unknown')
 const output = ref('连接中...')
 const isStartGameDisabled = ref(true)
-
-watch(() => globalConfig.value.server, (value) => {
-  serverTranslation.value = servers.find((s) => s.name === value)?.translation ?? 'universal.servers.unknown'
-})
 
 const onStartGameClick = () => {
   console.log('start game')

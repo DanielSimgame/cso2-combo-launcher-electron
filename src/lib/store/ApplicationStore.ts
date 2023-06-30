@@ -28,7 +28,7 @@ export const useAppStore = defineStore('app', () => {
     const globalConfig = ref<LauncherConfig>({
         username: '',
         password: '',
-        server: '',
+        server: { id: 1, name: 'shanghai', translation: 'universal.servers.Shanghai', unavailable: false },
         launcherLanguage: '',
         advancedCommand: '',
         gameLanguage: '',

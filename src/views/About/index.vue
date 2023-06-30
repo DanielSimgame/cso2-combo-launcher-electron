@@ -92,11 +92,11 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-import config from '../../../package.json'
+import packageConfig from '../../../package.json'
 import QqGroup from '@/components/QqGroup.vue'
 
-const version = config.version
-const gitRepoUrl = config.repository.url
+const version = packageConfig.version
+const gitRepoUrl = packageConfig.repository.url
 // const gitRepoUrl = 'https://github.com/DanielSimgame/cso2-combo-launcher-electron'
 
 const frameworks = [

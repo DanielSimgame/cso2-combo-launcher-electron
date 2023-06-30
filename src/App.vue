@@ -7,7 +7,7 @@
       </keep-alive>
     </template>
   </router-view>
-  <ProgressBar v-if="globalProgress.isShown"/>
+  <ProgressBar v-if="globalProgress.isShown" />
   <AppDialog
       v-model="globalDialog.isShown"
       :title="globalDialog.title"
@@ -27,7 +27,6 @@ const {globalDialog, globalProgress} = storeToRefs(useAppStore())
 
 // console.log("[App.vue]", `Hello world from Electron ${process.versions.electron}!`)
 </script>
-
 
 <style lang="scss">
 </style>
